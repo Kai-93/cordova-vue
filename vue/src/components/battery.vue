@@ -14,7 +14,7 @@
       }
     },
     mounted () {
-      document.title = 'battery'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'battery', bgColor: '#67cc06' })
       window.addEventListener('batterystatus', (status) => {
         alert('Level: ' + status.level + ' isPlugged: ' + status.isPlugged)
       }, false)

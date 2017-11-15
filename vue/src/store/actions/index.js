@@ -1,9 +1,11 @@
 import {
   showLoading,
-  hideLoading
+  hideLoading,
+  setTitleAndBgColor
 } from './widget'
 
 export default {
   showLoading,
-  hideLoading
+  hideLoading,
+  setTitleAndBgColor
 }

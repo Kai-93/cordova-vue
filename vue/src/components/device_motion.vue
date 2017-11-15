@@ -15,7 +15,7 @@
       }
     },
     mounted () {
-      document.title = 'Device Motion'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'Device Motion', bgColor: '#2294ff' })
     },
     methods: {
       show () {

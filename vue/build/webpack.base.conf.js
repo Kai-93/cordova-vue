@@ -10,8 +10,7 @@ function resolve (dir) {
 
 const baseConfig = {
   entry: {
-    // app: './src/main.js'
-    fm: './src/fm.js'
+    app: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,

@@ -8,15 +8,10 @@
     <router-link to="motion" class="link">Device Motion</router-link>
     <router-link to="orientation" class="link">Device Orientation</router-link>
     <router-link to="dialogs" class="link">Dialogs</router-link>
-    <group>
-      <cell title="title" value="value"></cell>
-    </group>
   </div>
 </template>
 
 <script>
-  import { Group, Cell } from 'vux'
-
   export default {
     name: 'HelloWorld',
     data () {
@@ -24,12 +19,8 @@
         msg: 'index'
       }
     },
-    components: {
-      Group,
-      Cell
-    },
     mounted () {
-      document.title = 'index'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'index', bgColor: '#ff97a8' })
     }
   }
 </script>

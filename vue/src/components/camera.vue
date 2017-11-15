@@ -23,7 +23,7 @@
     },
     mounted () {
       let vm = this
-      document.title = 'camera'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'camera', bgColor: '#1fae55' })
       document.querySelector('#upload').addEventListener('change', (event) => {
         let file = event.target.files[0]
         if (!/image\/\w+/.test(file.type)) {
@@ -62,8 +62,6 @@
       },
       back () {
         let vm = this
-        let temp = require('../util/test')['default']
-        temp['fun']()
         vm.$router.go(-1)
         return false
       }

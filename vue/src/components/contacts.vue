@@ -15,7 +15,7 @@
       }
     },
     mounted () {
-      document.title = 'contacts'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'contacts', bgColor: '#ff9a34' })
     },
     methods: {
       show () {

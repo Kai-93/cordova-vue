@@ -15,7 +15,7 @@
       }
     },
     mounted () {
-      document.title = 'Device Orientation'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'Device Orientation', bgColor: '#1ffff0' })
     },
     methods: {
       show () {

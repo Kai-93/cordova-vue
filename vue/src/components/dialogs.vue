@@ -18,7 +18,7 @@
       }
     },
     mounted () {
-      document.title = 'Dialogs'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'dialogs', bgColor: '#1aff6c' })
     },
     methods: {
       alert () {

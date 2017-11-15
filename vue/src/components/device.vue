@@ -15,7 +15,7 @@
       }
     },
     mounted () {
-      document.title = 'device'
+      this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'device', bgColor: '#ea33ff' })
     },
     methods: {
       show () {

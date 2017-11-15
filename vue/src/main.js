@@ -41,7 +41,6 @@ if (location.href.indexOf('8080') > -1) {
     // Update DOM on a Received Event
     receivedEvent: function () {
       /* eslint-disable */
-      StatusBar.backgroundColorByHexString('#C0C0C0')
       iniVue()
     }
   }
