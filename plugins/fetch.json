@@ -1,0 +1,90 @@
+{
+  "cordova-plugin-whitelist": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-whitelist@1"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-battery-status": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-battery-status"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-camera": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-camera"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-compat": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-compat@^1.1.0"
+    },
+    "is_top_level": false,
+    "variables": {}
+  },
+  "cordova-plugin-console": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-console"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-contacts": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/apache/cordova-plugin-contacts.git"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-device": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-device"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-device-motion": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-device-motion@1.2.5"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-device-orientation": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-device-orientation@1.0.7"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-dialogs": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-dialogs"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-statusbar": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/apache/cordova-plugin-statusbar.git"
+    },
+    "is_top_level": true,
+    "variables": {}
+  }
+}
