@@ -1,6 +1,6 @@
 <template>
   <header class="navigation" :style="style">
-    <a class="back" @click="back">返回</a>
+    <a class="back" @click="back" v-show="isBackHide">返回</a>
     <p class="title">{{pageTitle}}</p>
   </header>
 </template>
@@ -19,6 +19,9 @@
         return {
           'background': this.$store.state.pageTitleInfo.bgColor
         }
+      },
+      isBackHide () {
+        return !this.$route.meta.isBackHide
       }
     },
     methods: {

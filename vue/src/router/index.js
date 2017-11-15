@@ -10,6 +10,9 @@ let router = new Router({
       name: 'Hello',
       component (resolve) {
         require(['../components/HelloWorld.vue'], resolve)
+      },
+      meta: {
+        isBackHide: true
       }
     },
     {

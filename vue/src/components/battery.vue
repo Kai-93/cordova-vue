@@ -15,16 +15,21 @@
     },
     mounted () {
       this.$store.dispatch('setTitleAndBgColor', { pageTitle: 'battery', bgColor: '#67cc06' })
-      window.addEventListener('batterystatus', (status) => {
-        alert('Level: ' + status.level + ' isPlugged: ' + status.isPlugged)
-      }, false)
+      window.addEventListener('batterystatus', this.showBattery, false)
     },
     methods: {
+      showBattery (status) {
+        alert('Level: ' + status.level + ' isPlugged: ' + status.isPlugged)
+      },
       back () {
         let vm = this
         vm.$router.go(-1)
         return false
       }
+    },
+    beforeDestroy () {
+      console.log('beforeDestroy')
+      window.removeEventListener('batterystatus', this.showBattery, false)
     }
   }
 </script>
