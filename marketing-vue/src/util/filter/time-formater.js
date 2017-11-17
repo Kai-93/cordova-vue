@@ -46,9 +46,7 @@ export default {
     ymdhis += (strDay < 10 ? 0 + '' + strDay : strDay)
     if (isFull === true) {
       ymdhis += ' ' + time.getHours() + ':'
-
-      ymdhis += (time.getUTCMinutes() >= 0 && time.getUTCMinutes() <= 9) ?
-        '0' + time.getUTCMinutes() : time.getUTCMinutes()
+      ymdhis += (time.getUTCMinutes() >= 0 && time.getUTCMinutes() <= 9) ? '0' + time.getUTCMinutes() : time.getUTCMinutes()
     }
     return ymdhis
   },
@@ -67,8 +65,7 @@ export default {
 
     ymdhis += time.getHours() + ':'
 
-    ymdhis += (time.getUTCMinutes() >= 0 && time.getUTCMinutes() <= 9) ?
-      '0' + time.getUTCMinutes() : time.getUTCMinutes()
+    ymdhis += (time.getUTCMinutes() >= 0 && time.getUTCMinutes() <= 9) ? '0' + time.getUTCMinutes() : time.getUTCMinutes()
 
     return ymdhis
   }

@@ -16,8 +16,8 @@
           <div class="phone-certification-content">
             <span class="certification-icon"></span>
             <input v-model="code" type="text" maxlength="4" placeholder="输入验证码" @click="emptyTip">
-            <a class="phone-certification-btn" href="javascript:;" @click="getCode">{{getCodeBtnState === 'unclick'?
-              '获取验证码':getCodeBtnText}}</a>
+            <a class="phone-certification-btn" href="javascript:;" @click="getCode">{{getCodeBtnState === 'unclick' ?
+              '获取验证码' : getCodeBtnText}}</a>
           </div>
           <a @click="close" class="alert-close-btn" href="javascript:;"></a>
           <span v-show="tip" class="phone-bind-prompt">{{tip}}</span>
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+  import $ from 'jquery'
+
   export default {
     data () {
       return {
@@ -56,68 +58,69 @@
         return /^1[2|3|4|5|7|8]\d{9}$/.test(mobile)
       },
       countDown: function () {
-        var vm = this;
-        vm.send_code = 60;
-        function time() {
-          if (vm.send_code == 0) {
-            vm.getCodeBtnText = "重新发送";
+        let vm = this
+        vm.send_code = 60
+
+        function time () {
+          if (vm.send_code === 0) {
+            vm.getCodeBtnText = '重新发送'
           } else {
-            vm.getCodeBtnText = vm.send_code + "秒后重发";
-            vm.send_code--;
-            var timer = setTimeout(function () {
-              clearTimeout(timer);
-              time();
-            }, 1000);
+            vm.getCodeBtnText = vm.send_code + '秒后重发'
+            vm.send_code--
+            let timer = setTimeout(function () {
+              clearTimeout(timer)
+              time()
+            }, 1000)
           }
         }
 
-        time();
+        time()
       },
       getCode: function () {
-        var vm = this;
+        let vm = this
         if (!vm.isMobileNumber(vm.mobile)) {
-          vm.tip = '请输入正确的手机号';
+          vm.tip = '请输入正确的手机号'
         } else {
-          if (vm.send_code == 0) {
-            vm.getCodeBtnState = 'clicked';
+          if (vm.send_code === 0) {
+            vm.getCodeBtnState = 'clicked'
             $.post('/auth/sendcode', {
               'phone': vm.mobile
             }, function (res) {
-              if (res.status == 1) {
-                vm.countDown();
+              if (res.status === 1) {
+                vm.countDown()
               } else {
-                vm.tip = '发送失败';
+                vm.tip = '发送失败'
               }
-            }, 'json');
+            }, 'json')
           }
         }
       },
       mobileBinding: function () {
-        var vm = this;
+        let vm = this
         if (vm.isMobileNumber(vm.mobile)) {
           $.post('/user/mobile/' + vm.has_user, {
             'mobile': vm.mobile,
             'code': vm.code
           }, function (res) {
-            console.log(res);
-            if (res.status == 1) {
-              vm.close();
-              confirm('手机验证成功!');
-              window.location.reload();
+            console.log(res)
+            if (res.status === 1) {
+              vm.close()
+              confirm('手机验证成功!')
+              window.location.reload()
             } else {
-              if (res.error_code == 20005) {
-                vm.tip = '验证码错误';
-              } else if (res.error_code == 20014) {
-                vm.tip = '手机已绑定';
-              } else if (res.error_code == 20015) {
-                vm.tip = '手机已注册';
+              if (res.error_code === 20005) {
+                vm.tip = '验证码错误'
+              } else if (res.error_code === 20014) {
+                vm.tip = '手机已绑定'
+              } else if (res.error_code === 20015) {
+                vm.tip = '手机已注册'
               }
             }
-          }, 'json');
+          }, 'json')
         }
       },
       close: function () {
-        $('#popout').html('');
+        $('#popout').html('')
         if (this.close_path) {
           window.location.href = this.close_path
         }

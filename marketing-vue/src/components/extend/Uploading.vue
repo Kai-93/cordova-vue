@@ -2,7 +2,7 @@
   <div id="popout">
     <div class="loading-wrapper">
       <div class="loading-content">
-        <img class="loading" src="../../../static/img/loading.png" alt="">
+        <img class="loading" src="../../static/img/loading.png" alt="">
         <p>{{msg}}</p>
       </div>
     </div>

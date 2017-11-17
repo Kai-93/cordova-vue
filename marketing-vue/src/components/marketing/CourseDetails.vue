@@ -129,11 +129,11 @@
 
     <!--底部按钮-->
     <div class="mc-btn-container">
-      <a href="javascript:;" @click.stop="back" v-if="origin == 0" class="back-btn">营销课程</a>
+      <a href="javascript:;" @click.stop="back" v-if="origin === 0" class="back-btn">营销课程</a>
       <a class="buy-btn" href="javascript:;" @click="pay" v-if="user_msg.has_buy_course === 1">永久学习（已购买）</a>
       <a class="buy-btn no" href="javascript:;" @click="pay"
          v-else-if="user_msg.left_days >= 1">限时听课（剩余{{user_msg.left_days}}天）</a>
-      <a class="buy-btn no" href="javascript:;" @click="pay" v-else>购买学习（{{origin == 0 ? '￥47' : '47美币'}}）</a>
+      <a class="buy-btn no" href="javascript:;" @click="pay" v-else>购买学习（{{origin === 0 ? '￥47' : '47美币'}}）</a>
     </div>
 
     <!--未购买弹窗-->
@@ -148,7 +148,7 @@
         </section>
         <footer>
           <a class="mc-btn" @click="alert_pay=false">再看看</a>
-          <a class="mc-btn" @click="pay">购买学习({{origin == 0 ? '￥47' : '47美币'}})</a>
+          <a class="mc-btn" @click="pay">购买学习({{origin === 0 ? '￥47' : '47美币'}})</a>
         </footer>
       </div>
     </div>
@@ -168,17 +168,15 @@
         </footer>
       </div>
     </div>
-
-    <!--<temp-view v-show="preview_temp" :temp="preview_temp" :info_complete="all_info_complete"-->
-    <!--v-on:close_preview="close_preview" :popData="popData"></temp-view>-->
   </div>
 
 </template>
 
 <script>
   import Vue from 'vue'
-  import MyAlert from 'extend/MyAlert.vue'
-  import mobileBinding from 'extend/mobileBinding.vue'
+  import MyAlert from '../extend/MyAlert.vue'
+  import mobileBinding from '../extend/mobileBinding.vue'
+  import $ from 'jquery'
 
   export default {
     data () {
@@ -197,7 +195,7 @@
         word_pos: 0,
         words_show: 0,
         poster_show: 0,
-        uid: 0,  //是否绑定
+        uid: 0,  // 是否绑定
         has_subscribe: 0,
         origin: 0,
         has_user: 'create',
@@ -224,44 +222,24 @@
       document.title = '课程详情'
       /* 主页的返回 */
       window.addEventListener('popstate', function () {
-        if (vm.isPageShow == true) {
+        if (vm.isPageShow === true) {
           vm.preview_temp = ''
         }
       }, false)
     },
     methods: {
       pushHistory () {
-        let vm = this,
-          state = {
-            title: 'title',
-            url: '#'
-          }
+        let vm = this
+        let state = {
+          title: 'title',
+          url: '#'
+        }
         window.history.pushState(state, 'title', '#1')
         vm.isPageShow = true
       },
-//      preview: function (poster) {
-//        let vm = this;
-//        if (poster.type == "page") {
-//          this.preview_temp = {
-//            id: poster.poster_id,
-//            img: poster.cover,
-//            typ: 'page',
-//          };
-//          vm.pushHistory()
-//        } else {
-//          this.$store.state.preview.poseter = poster;
-//          let href = '/wx/index#/poster/' + poster.poster_id + '/' + poster.type + '/scenes#'
-//          window.location.href = href
-//        }
-//      },
-//      close_preview: function () {
-//        window.history.go(-1)
-//        this.preview_temp = false;
-//      },
-
       poster_change: function () {
-        let vm = this,
-          i = vm.poster_pos
+        let vm = this
+        let i = vm.poster_pos
         if (vm.posters.length > i * 3) {
           vm.poster_pos = i + 1
         } else {
@@ -270,8 +248,8 @@
         vm.show_posters = vm.posters.slice((vm.poster_pos - 1) * 3, vm.poster_pos * 3)
       },
       change_word: function () {
-        let vm = this,
-          j = vm.word_pos
+        let vm = this
+        let j = vm.word_pos
         if (j < vm.recommend_word.length) {
           vm.word_pos = j + 1
         } else {
@@ -281,17 +259,19 @@
       },
       copy_text: function () {
         let vm = this
-        if (Clipboard.isSupported() == false) {
+        if (window.Clipboard.isSupported() === false) {
           vm.isAlertText = true
           vm.alert_word_text = '请手动复制文本'
         } else {
           let clipBordText = $('#word_text').text()
-          new Clipboard('.copy-btn', {
+          /* eslint-disable no-new */
+          new window.Clipboard('.copy-btn', {
             text: function () {
               return clipBordText
             }
           })
-          setTimeout(function () {
+          let timer = setTimeout(function () {
+            clearTimeout(timer)
             vm.isAlertText = true
             vm.alert_word_text = '文本复制成功'
           }, 500)
@@ -302,15 +282,15 @@
         vm.isAlertText = false
       },
       pay: function () {
-        if (this.has_buy_course == 0) {
-          /*未购买*/
+        if (this.has_buy_course === 0) {
+          /* 未购买 */
           /*
            * origin: 0为web,ios为苹果,android为安卓
            * */
-          if (this.origin == 0) {
-            if (this.has_subscribe == 0) {
-              /*has_subscribe:0为未关注的用户*/
-              //弹出关注二维码
+          if (this.origin === 0) {
+            if (this.has_subscribe === 0) {
+              /* has_subscribe:0为未关注的用户 */
+              // 弹出关注二维码
               let vm = this
               vm.alert_pay = false
               let gdata = {
@@ -332,10 +312,9 @@
                 }
               })
               new Alert().$mount('#popout')
-
-            } else if (parseInt(this.uid) == 0) {
-              /*uid:0为未绑定手机号码的用户*/
-              //弹出绑定手机弹窗
+            } else if (parseInt(this.uid) === 0) {
+              /* uid:0为未绑定手机号码的用户 */
+              // 弹出绑定手机弹窗
               let vm = this
               vm.alert_pay = false
               let mdata = {
@@ -350,18 +329,18 @@
               })
               new Alert().$mount('#popout')
             } else {
-              /*未购买*/
-              let order_type = 'mc',
-                vm = this
+              /* 未购买 */
+              let orderType = 'mc'
+              let vm = this
 
               if (vm.pay_state) {
                 vm.pay_state = false
                 $.post('/wx/order/create', {
-                  'order_type': order_type
+                  'order_type': orderType
                 }, function (res) {
-                  if (res.status == 1) {
+                  if (res.status === 1) {
                     if (!vm.video_btn) {
-                      vm.countVideo(vm.$route.params.course_id, document.querySelector('video').currentTime, function () {
+                      vm.countVideo(vm.$route.params.courseId, document.querySelector('video').currentTime, function () {
                         window.location.href = '/wx/pay/order/index/' + res.order_id
                       })
                     } else {
@@ -382,22 +361,22 @@
               $.post('/wx/order/create', {
                 'order_type': 'mc'
               }, function (res) {
-                if (res.status == 1) {
+                if (res.status === 1) {
                   window.location.href = '/app/pay/index/' + res.order_id
                 } else {
                   alert('创建订单失败')
                 }
               }, 'json')
             } else {
-              if (this.origin == 'ios') {
+              if (this.origin === 'ios') {
                 window.webkit.messageHandlers.funAppPay.postMessage('mc')
-              } else if (this.origin == 'android') {
-                android.funAppPay('mc')
+              } else if (this.origin === 'android') {
+                window.android.funAppPay('mc')
               }
             }
           }
         } else {
-          /*已购买*/
+          /* 已购买 */
           let cdata = {
             msg: '<p>您已购买！</p>',
             close_btn: '知道了',
@@ -425,71 +404,39 @@
       play: function () {
         let vm = this
         if (parseInt(this.uid) !== 0) {
-          /*手机绑定*/
+          /* 手机绑定 */
           /*
            * origin: 0为web,ios为苹果,android为安卓
            * */
-          if (this.origin == 0) {
+          if (this.origin === 0) {
             if (vm.user_msg.left_days < 1 && vm.user_msg.has_buy_course !== 1) {
-              /*不是vip会员和未购买过营销课程*/
-              //弹出购买提示弹窗
+              /* 不是vip会员和未购买过营销课程 */
+              // 弹出购买提示弹窗
               vm.alert_pay = true
-//              let cdata = {
-//                msg: '<p>您还未购买营销课程，不能听课！购买可永久听课哦！</p>',
-//                close_btn: '知道了',
-//                close_path: '',
-//                sure_btn: false,
-//                alert_name: 'mc-alert',
-//                has_title: true,
-//                title: '提示',
-//                mc_know_btn: true
-//              };
-//              let Alert = Vue.extend(MyAlert).extend({
-//                data: function () {
-//                  return cdata
-//                }
-//              });
-//              new Alert().$mount('#popout')
             } else {
-              /*是会员或者不是会员已经购买*/
+              /* 是会员或者不是会员已经购买 */
               vm.video_btn = false
               let timer = setTimeout(function () {
                 clearTimeout(timer)
                 document.querySelector('video').play()
               }, 500)
-              vm.countVideo(vm.$route.params.course_id, '', function (res) {
+              vm.countVideo(vm.$route.params.courseId, '', function (res) {
                 vm.record_id = res.record_id
               })
             }
           } else {
             if (vm.user_msg.left_days < 1 && vm.user_msg.has_buy_course !== 1) {
-              /*不是vip会员和未购买过营销课程*/
-              //弹出购买提示弹窗
+              /* 不是vip会员和未购买过营销课程 */
+              // 弹出购买提示弹窗
               vm.alert_pay = true
-//              let cdata = {
-//                msg: '<p>您还未购买营销课程，不能听课！购买可永久听课哦！</p>',
-//                close_btn: '知道了',
-//                close_path: '',
-//                sure_btn: false,
-//                alert_name: 'mc-alert',
-//                has_title: true,
-//                title: '提示',
-//                mc_know_btn: true
-//              };
-//              let Alert = Vue.extend(MyAlert).extend({
-//                data: function () {
-//                  return cdata
-//                }
-//              });
-//              new Alert().$mount('#popout')
             } else {
-              /*是会员或者不是会员已经购买*/
+              /* 是会员或者不是会员已经购买 */
               vm.video_btn = false
               let timer = setTimeout(function () {
                 clearTimeout(timer)
                 document.querySelector('video').play()
               }, 500)
-              vm.countVideo(vm.$route.params.course_id, '', function (res) {
+              vm.countVideo(vm.$route.params.courseId, '', function (res) {
                 vm.record_id = res.record_id
               })
             }
@@ -507,44 +454,15 @@
           })
           new Alert().$mount('#popout')
         }
-        // if (vm.user_msg.left_days < 1 && vm.user_msg.has_buy_course !== 1) {
-        //   let cdata = {
-        //     msg: '<p>您还未购买营销课程，不能听课！购买可永久听课哦！</p>',
-        //     close_btn: '知道了',
-        //     close_path: '',
-        //     sure_btn: false,
-        //     alert_name: 'mc-alert',
-        //     has_title: true,
-        //     title: '提示',
-        //     mc_know_btn: true
-        //   };
-        //
-        //   let Alert = Vue.extend(MyAlert).extend({
-        //     data: function () {
-        //       return cdata
-        //     }
-        //   });
-        //   new Alert().$mount('#popout')
-        // }
-        // else {
-        //   vm.video_btn = false;
-        //   let timer = setTimeout(function () {
-        //     clearTimeout(timer);
-        //     document.querySelector('video').play();
-        //   }, 500);
-        //   vm.countVideo(vm.$route.params.course_id, '', function (res) {
-        //     vm.record_id = res.record_id
-        //   });
-        // }
       },
-      countVideo: function (course_id, play_time, callback) {
+      countVideo: function (courseId, playTime, callback) {
         let vm = this
         let data = {
-          course_id: course_id,
+          course_id: courseId,
           record_id: vm.record_id
         }
-        if (play_time || play_time === 0) {
-          data['play_time'] = parseInt(play_time)
+        if (playTime || playTime === 0) {
+          data['playTime'] = parseInt(playTime)
         }
         $.post('/wx/mc/play/video', data, function (res) {
           if (res.status === 1) {
@@ -566,12 +484,12 @@
           }, 3000)
         }
       },
-      toOther: function (event, course_id) {
-        this.$router.push('/course/details/' + course_id)
+      toOther: function (event, courseId) {
+        this.$router.push('/course/details/' + courseId)
       },
       postData: function (vm) {
-        $.post('/wx/mc/detail/' + vm.$route.params.course_id, function (res) {
-          if (res.error_code == 20018) {
+        $.post('/wx/mc/detail/' + vm.$route.params.courseId, function (res) {
+          if (res.error_code === 20018) {
             window.location.href = '/wx/login'
             return
           }
@@ -588,7 +506,7 @@
           vm.has_buy_course = res.user_msg.has_buy_course
           vm.has_subscribe = res.user_msg.has_subscribe
           // ak值强制转化为0
-          if (res.user_msg.ak == 'wx') {
+          if (res.user_msg.ak === 'wx') {
             vm.origin = 0
           } else {
             vm.origin = res.user_msg.ak
@@ -597,10 +515,10 @@
           vm.user_msg = res.user_msg
           vm.words_show = res.course.words_show
           vm.poster_show = res.course.poster_show
-          if (vm.recommend_word.length == 0) {
+          if (vm.recommend_word.length === 0) {
             vm.words_show = 0
           }
-          if (vm.posters.length == 0) {
+          if (vm.posters.length === 0) {
             vm.poster_show = 0
           }
           vm.related_courses = res.course.related_courses
@@ -615,7 +533,7 @@
         let vm = this
         if (to.path.match('/course/details/') && from.path.match('/course/details/')) {
           if (!vm.video_btn) {
-            vm.countVideo(vm.$route.params.course_id, document.querySelector('video').currentTime, function () {
+            vm.countVideo(vm.$route.params.courseId, document.querySelector('video').currentTime, function () {
               vm.postData(vm)
               window.scrollTo(0, 0)
             })
@@ -628,11 +546,11 @@
     },
     updated: function () {
       let vm = this
-      /*分享事件*/
+      /* 分享事件 */
       let timer = setTimeout(function () {
         clearTimeout(timer)
-        //分享给朋友
-        wx.onMenuShareAppMessage({
+        // 分享给朋友
+        window.wx.onMenuShareAppMessage({
           title: vm.course.title, // 分享标题
           desc: vm.course.share_friend, // 分享描述
           link: window.location.href, // 分享链接
@@ -641,16 +559,16 @@
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
             // 用户确认分享后执行的回调函数
-            //$.diyAlert("分享成功！");
+            // $.diyAlert("分享成功！");
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
-            //alert("用户取消分享！");
+            // alert("用户取消分享！");
           }
         })
 
-        //分享到朋友圈
-        wx.onMenuShareTimeline({
+        // 分享到朋友圈
+        window.wx.onMenuShareTimeline({
           title: vm.course.share_circle, // 分享标题
           desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
           link: window.location.href, // 分享链接
@@ -658,7 +576,7 @@
 
           success: function () {
             // 用户确认分享后执行的回调函数
-            //$.diyAlert("分享到朋友圈成功！");
+            // $.diyAlert("分享到朋友圈成功！");
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
@@ -666,9 +584,9 @@
         })
       }, 1000);
 
-      /*视频src*/
+      /* 视频src */
       (function () {
-        if (document.getElementById('app').dataset.origin == 0 || document.getElementById('app').dataset.origin == '0') {
+        if (document.getElementById('app').dataset.origin === 0 || document.getElementById('app').dataset.origin === '0') {
           document.querySelector('video').src = document.getElementById('app').dataset.video_domain + vm.course.course_video
         } else {
           document.querySelector('video').src = document.getElementById('app').dataset.video_no_referer + vm.course.course_video
@@ -677,32 +595,31 @@
     },
     beforeRouteEnter (to, from, next) {
       next(function (vm) {
-          vm.app_version = $('#app_version').val()
-          vm.popData.origin = $('#app').data('origin')
-          vm.postData(vm)
-          let timer1 = setTimeout(function () {
-            clearTimeout(timer1)
-            MtaH5.clickStat('MC' + vm.$route.params.course_id)
-          }, 2000)
+        vm.app_version = $('#app_version').val()
+        vm.popData.origin = $('#app').data('origin')
+        vm.postData(vm)
+        let timer1 = setTimeout(function () {
+          clearTimeout(timer1)
+          window.MtaH5.clickStat('MC' + vm.$route.params.courseId)
+        }, 2000)
 
-          let timer = setTimeout(function () {
-            clearTimeout(timer)
-            document.querySelector('video').addEventListener('ended', function () {
-              /*视频播放结束后,发送播放记录,清空已有记录:显示播放按钮,播放记录ID清空*/
-              vm.countVideo(vm.$route.params.course_id, document.querySelector('video').currentTime, function () {
-                vm.video_btn = true
-                vm.record_id = 0
-              })
-            }, false)
-          }, 1000)
-        }
-      )
+        let timer = setTimeout(() => {
+          clearTimeout(timer)
+          document.querySelector('video').addEventListener('ended', () => {
+            /* 视频播放结束后,发送播放记录,清空已有记录:显示播放按钮,播放记录ID清空 */
+            vm.countVideo(vm.$route.params.courseId, document.querySelector('video').currentTime, () => {
+              vm.video_btn = true
+              vm.record_id = 0
+            })
+          }, false)
+        }, 1000)
+      })
     },
     beforeRouteLeave: function (to, from, next) {
       let vm = this
       to.meta.keepAlive = true
       if (!vm.video_btn) {
-        vm.countVideo(vm.$route.params.course_id, document.querySelector('video').currentTime, function () {
+        vm.countVideo(vm.$route.params.courseId, document.querySelector('video').currentTime, function () {
           next(true)
         })
       } else {

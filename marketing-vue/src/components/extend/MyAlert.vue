@@ -10,7 +10,8 @@
         </section>
         <a v-if="right_top_close_btn" @click="close" class="alert-close-btn" href="javascript:;"></a>
         <footer>
-          <a v-if="cancel_btn" class="btn" :class="{'btn-cancel':sure_btn,'mc-know-btn':mc_know_btn,'mc-btn':mc-btn}" @click="close">{{close_btn}}</a>
+          <a v-if="cancel_btn" class="btn" :class="{'btn-cancel':sure_btn,'mc-know-btn':mc_know_btn,'mc-btn':mc-btn}"
+             @click="close">{{close_btn}}</a>
           <a v-if="sure_btn" :href="sure_path" class="btn" :class="sure_btn_class">{{sure_btn}}</a>
         </footer>
       </div>
@@ -19,6 +20,8 @@
 </template>
 
 <script>
+  import $ from 'jquery'
+
   export default {
     data () {
       return {
@@ -37,7 +40,7 @@
     },
     methods: {
       close: function () {
-        $('#popout').html('');
+        $('#popout').html('')
         if (this.close_path) {
           window.location.href = this.close_path
         }

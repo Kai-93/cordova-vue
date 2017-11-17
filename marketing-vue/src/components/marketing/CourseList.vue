@@ -2,11 +2,11 @@
   <div id="container" class="mcContainer">
     <div class="course-video-container">
       <video id="list_video"
-             src="http://of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
+             src="http:// of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
              class="video-js" webkit-playsinline playsinline controls preload="auto" width="100%"
              poster="../../../static/img/marketing-course-preview.jpg" data-setup="{}">
         <source
-          src="http://of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
+          src="http:// of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
           type="video/mp4">
         <p class="vjs-no-js">暂不支持您的手机型号!</p>
       </video>
@@ -91,17 +91,18 @@
 
 <script>
   import Vue from 'vue'
-  import mobileBinding from 'extend/mobileBinding.vue'
-  import MyAlert from 'extend/MyAlert.vue'
+  import mobileBinding from '../extend/mobileBinding.vue'
+  import MyAlert from '../extend/MyAlert.vue'
+  import $ from 'jquery'
 
   export default {
     data () {
       return {
-        learn_count: 0, //学习人数
-        course_count: 0, //播放数量
-        course_list: [], //课程列表
-        has_buy_course: 0, //是否购买课程
-        uid: 0,  //是否绑定
+        learn_count: 0, // 学习人数
+        course_count: 0, // 播放数量
+        course_list: [], // 课程列表
+        has_buy_course: 0, // 是否购买课程
+        uid: 0,  // 是否绑定
         has_subscribe: 0,
         origin: 0,
         has_user: 'create',
@@ -110,36 +111,68 @@
         list_video_btn: true
       }
     },
+    mounted: function () {
+      let vm = this
+      document.title = '营销课程'
+      let timer = setTimeout(function () {
+        clearTimeout(timer)
+        if (sessionStorage.getItem('top') === null) {
+          window.scrollTo(0, 0)
+        } else {
+          window.scrollTo(0, Number(sessionStorage.getItem('top')))
+        }
+        window.funPlay = function () {
+          document.querySelector('#list_video').play()
+          vm.list_video_btn = false
+        }
+        window.funPaused = function () {
+          document.querySelector('#list_video').pause()
+          vm.list_video_btn = true
+        }
+      }, 500)
+      /* 获取用户网络状态，视频自动播放 */
+      let timer2 = setTimeout(function () {
+        clearTimeout(timer2)
+        window.wx.getNetworkType({
+          success: function (res) {
+            let networkType = res.networkType // 返回网络类型2g，3g，4g，wifi
+            if (networkType === 'wifi') {
+              vm.play()
+            }
+          }
+        })
+      }, 2000)
+    },
     updated: function () {
       let timer = setTimeout(function () {
         clearTimeout(timer)
-        //分享给朋友
-        wx.onMenuShareAppMessage({
+        // 分享给朋友
+        window.wx.onMenuShareAppMessage({
           title: '美业设计助手·一键生成美图', // 分享标题
           desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
-          link: 'http://mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
-          imgUrl: document.getElementById('app').dataset.domain + '../../../static/img/share.jpg', // 分享图标
+          link: 'http:// mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
+          imgUrl: document.getElementById('app').dataset.domain + '../../static/img/share.jpg', // 分享图标
           type: 'link', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
             // 用户确认分享后执行的回调函数
-            //$.diyAlert("分享成功！");
+            // $.diyAlert("分享成功！");
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
-            //alert("用户取消分享！");
+            // alert("用户取消分享！");
           }
         })
-        //分享到朋友圈
-        wx.onMenuShareTimeline({
+        // 分享到朋友圈
+        window.wx.onMenuShareTimeline({
           title: '美业设计助手·一键生成美图', // 分享标题
           desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
-          link: 'http://mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
-          imgUrl: document.getElementById('app').dataset.domain + '../../../static/img/share.jpg', // 分享图标
+          link: 'http:// mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
+          imgUrl: document.getElementById('app').dataset.domain + '../../static/img/share.jpg', // 分享图标
 
           success: function () {
             // 用户确认分享后执行的回调函数
-            //$.diyAlert("分享到朋友圈成功！");
+            // $.diyAlert("分享到朋友圈成功！");
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
@@ -157,7 +190,7 @@
        * 更改者:Kaiser
        * */
       buy_course: function () {
-        /*未购买的点击才有效*/
+        /* 未购买的点击才有效 */
         console.log('buy_course')
         if (this.has_buy_course === 0) {
           /*
@@ -165,8 +198,8 @@
            * */
           if (this.origin === '0') {
             if (this.has_subscribe === 0) {
-              /*has_subscribe:0为未关注的用户*/
-              //弹出关注二维码
+              /* has_subscribe:0为未关注的用户 */
+              // 弹出关注二维码
               let gdata = {
                 alert_name: 'kf-alert',
                 popover_name: 'alert-qrCode-bg',
@@ -174,22 +207,20 @@
                 title: '请先关注我们再加入会员哦',
                 title_p_class: 'kf-alert-title',
                 mode: 'html',
-                msg: '<div class="qrCoder-container"><img src="../../../static/img/weiguanzhu.jpg" alt="未关注二维码"></div><p class="qrCode-prompt">长按识别二维码加入</p>',
+                msg: '<div class="qrCoder-container"><img src="../../static/img/weiguanzhu.jpg" alt="未关注二维码"></div><p class="qrCode-prompt">长按识别二维码加入</p>',
                 sure_btn: false,
                 cancel_btn: false,
                 right_top_close_btn: true
               }
-
               let Alert = Vue.extend(MyAlert).extend({
                 data: function () {
                   return gdata
                 }
               })
               new Alert().$mount('#popout')
-
             } else if (parseInt(this.uid) === 0) {
-              /*uid:0为未绑定手机号码的用户*/
-              //弹出绑定手机弹窗
+              /* uid:0为未绑定手机号码的用户 */
+              // 弹出绑定手机弹窗
               let mdata = {
                 alert_name: 'kf-alert',
                 sure_btn_class: 'kf-alert-btn',
@@ -202,10 +233,10 @@
               })
               new Alert().$mount('#popout')
             } else {
-              /*去购买*/
+              /* 去购买 */
               let nowTime = new Date().getTime()
               let clickTime = $(this).attr('ctime')
-              if (clickTime != 'undefined' && (nowTime - clickTime < 3000)) {
+              if (clickTime !== 'undefined' && (nowTime - clickTime < 3000)) {
                 return false
               } else {
                 $(this).attr('ctime', nowTime)
@@ -221,15 +252,6 @@
               }, 'json')
             }
           } else {
-//            $.post('/wx/order/create', {
-//              'order_type': 'mc'
-//            }, function (res) {
-//              if (res.status === 1) {
-//                window.location.href = '/app/pay/index/' + res.order_id;
-//              } else {
-//                alert('创建订单失败');
-//              }
-//            }, 'json');
             if (this.app_version < '2.2.0') {
               $.post('/wx/order/create', {
                 'order_type': 'mc'
@@ -244,20 +266,20 @@
               if (this.origin === 'ios') {
                 window.webkit.messageHandlers.funAppPay.postMessage('mc')
               } else if (this.origin === 'android') {
-                android.funAppPay('mc')
+                window.android.funAppPay('mc')
               }
             }
           }
         }
-        /*购买视频暂停*/
+        /* 购买视频暂停 */
         document.querySelector('#list_video').pause()
         this.list_video_btn = true
       },
       close_alert: function () {
         this.bind_mobile = false
       },
-      toOther: function (event, course_id) {
-        this.$router.push('/course/details/' + course_id)
+      toOther: function (event, courseId) {
+        this.$router.push('/course/details/' + courseId)
       },
       funIsOwnEmpty (obj) {
         for (let name in obj) {
@@ -267,38 +289,6 @@
         }
         return true
       }
-    },
-    mounted: function () {
-      let vm = this
-      document.title = '营销课程'
-      let timer = setTimeout(function () {
-        clearTimeout(timer)
-        if (sessionStorage.getItem('top') === null) {
-          window.scrollTo(0, 0)
-        } else {
-          window.scrollTo(0, Number(sessionStorage.getItem('top')))
-        }
-        window.funPlay = function () {
-          document.querySelector('#list_video').play()
-          window.vue.list_video_btn = false
-        }
-        window.funPaused = function () {
-          document.querySelector('#list_video').pause()
-          window.vue.list_video_btn = true
-        }
-      }, 500)
-      /*获取用户网络状态，视频自动播放*/
-      let timer2 = setTimeout(function () {
-        clearTimeout(timer2)
-        wx.getNetworkType({
-          success: function (res) {
-            let networkType = res.networkType // 返回网络类型2g，3g，4g，wifi
-            if (networkType === 'wifi') {
-              vm.play()
-            }
-          }
-        })
-      }, 2000)
     },
     beforeRouteEnter (to, from, next) {
       next(function (vm) {
@@ -328,7 +318,7 @@
             }
             let timer1 = setTimeout(function () {
               clearTimeout(timer1)
-              MtaH5.clickStat('MarketingCourse')
+              window.MtaH5.clickStat('MarketingCourse')
             }, 2000)
             vm.learn_count = res.learn_count
             vm.course_count = res.course_count
@@ -352,20 +342,20 @@
             window.location.href = '/wx/login'
             return false
           }
-          let timer1 = setTimeout(function () {
-            clearTimeout(timer1)
-            MtaH5.clickStat('MarketingCourse')
+          let timer = setTimeout(function () {
+            clearTimeout(timer)
+            window.MtaH5.clickStat('MarketingCourse')
           }, 2000)
           /* 关注状态改变 */
-          if (vm.has_subscribe != res.has_subscribe) {
+          if (vm.has_subscribe !== res.has_subscribe) {
             vm.has_subscribe = res.has_subscribe
           }
-          /*绑定手机状态改变*/
-          if (vm.uid != res.uid) {
+          /* 绑定手机状态改变 */
+          if (vm.uid !== res.uid) {
             vm.uid = res.uid
           }
-          /*购买状态的改变*/
-          if (vm.has_buy_course != res.has_buy_course) {
+          /* 购买状态的改变 */
+          if (vm.has_buy_course !== res.has_buy_course) {
             vm.has_buy_course = res.has_buy_course
           }
         })
@@ -380,5 +370,4 @@
       next(true)
     }
   }
-
 </script>

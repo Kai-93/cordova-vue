@@ -7,13 +7,14 @@ const routes = [
   {
     path: '/',
     component (resolve) {
-      require(['../components/CourseList.vue'], resolve)
+      require(['../components/marketing/CourseList.vue'], resolve)
     }
   },
   {
-    path: '/course/details/:course_id', component (resolve) {
-    require(['../components/CourseDetails.vue'], resolve)
-  }
+    path: '/course/details/:courseId',
+    component (resolve) {
+      require(['../components/marketing/CourseDetails.vue'], resolve)
+    }
   }
 ]
 

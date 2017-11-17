@@ -4,41 +4,23 @@ import Vue from 'vue'
 import router from './router/index'
 import App from './App.vue'
 import timeFormater from './util/filter/time-formater'
+import { imgFile } from './util/filter/img-file'
+import { videoFile } from './util/filter/video-file'
+import { textInterception } from './util/filter/text-interception'
+require('./util/third/clipboard.min')
 
 Vue.config.productionTip = false
 
-Vue.filter('time_format', function (value, input) {
-  let temp = input === 'full'
-  return timeFormater.UnixToDate(value, temp)
-})
+Vue.filter('time_format', timeFormater.UnixToDate)
 
-Vue.filter('imgFile', function (value, fm) {
-  if (!value) return ''
-  return document.getElementById('app').dataset.img_domain + value + (fm ? fm : '')
-})
+Vue.filter('imgFile', imgFile)
 
-Vue.filter('videoFile', function (value, fm) {
-  if (!value) return ''
-  if (document.getElementById('app').dataset.origin === 0 || document.getElementById('app').dataset.origin === '0') {
-    return document.getElementById('app').dataset.video_domain + value + (fm ? fm : '')
-  } else {
-    return document.getElementById('app').dataset.video_no_referer + value + (fm ? fm : '')
-  }
-})
+Vue.filter('videoFile', videoFile)
 
-Vue.filter('textInterception', function (value, limit_length) {
-  if (!value) return ''
-  if (value.length > parseInt(limit_length)) {
-    return value.substring(0, parseInt(limit_length) - 1) + '...'
-  } else {
-    return value
-  }
-})
+Vue.filter('textInterception', textInterception)
 
-
-const app = new Vue({
+/* eslint-disable no-new */
+new Vue({
   router,
-  App
-})
-
-app.$mount('#app')
+  render: h => h(App)
+}).$mount('#app')
