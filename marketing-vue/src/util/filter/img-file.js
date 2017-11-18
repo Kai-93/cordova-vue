@@ -1,3 +1,3 @@
 export function imgFile (value, rule = '') {
-  return document.getElementById('app').dataset.img_domain + value + rule
+  return document.querySelector('#img_domain').value + value + rule
 }

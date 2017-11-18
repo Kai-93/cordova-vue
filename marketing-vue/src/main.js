@@ -7,7 +7,10 @@ import timeFormater from './util/filter/time-formater'
 import { imgFile } from './util/filter/img-file'
 import { videoFile } from './util/filter/video-file'
 import { textInterception } from './util/filter/text-interception'
+
 require('./util/third/clipboard.min')
+require('../static/css/base.css')
+require('./util/fit-2.0')
 
 Vue.config.productionTip = false
 

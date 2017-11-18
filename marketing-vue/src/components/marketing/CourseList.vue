@@ -2,11 +2,11 @@
   <div id="container" class="mcContainer">
     <div class="course-video-container">
       <video id="list_video"
-             src="http:// of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
+             src="http://of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
              class="video-js" webkit-playsinline playsinline controls preload="auto" width="100%"
              poster="../../../static/img/marketing-course-preview.jpg" data-setup="{}">
         <source
-          src="http:// of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
+          src="http://of9vt0139.bkt.clouddn.com/%E7%BD%91%E7%BB%9C%E8%90%A5%E9%94%8052%E6%8B%9B%20%E4%BB%8B%E7%BB%8D%E8%A7%86%E9%A2%91.mp4"
           type="video/mp4">
         <p class="vjs-no-js">暂不支持您的手机型号!</p>
       </video>
@@ -318,7 +318,7 @@
             }
             let timer1 = setTimeout(function () {
               clearTimeout(timer1)
-              window.MtaH5.clickStat('MarketingCourse')
+              window.MtaH5 && window.MtaH5.clickStat('MarketingCourse')
             }, 2000)
             vm.learn_count = res.learn_count
             vm.course_count = res.course_count
@@ -344,7 +344,7 @@
           }
           let timer = setTimeout(function () {
             clearTimeout(timer)
-            window.MtaH5.clickStat('MarketingCourse')
+            window.MtaH5 && window.MtaH5.clickStat('MarketingCourse')
           }, 2000)
           /* 关注状态改变 */
           if (vm.has_subscribe !== res.has_subscribe) {

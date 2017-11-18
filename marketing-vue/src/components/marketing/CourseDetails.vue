@@ -600,7 +600,7 @@
         vm.postData(vm)
         let timer1 = setTimeout(function () {
           clearTimeout(timer1)
-          window.MtaH5.clickStat('MC' + vm.$route.params.courseId)
+          window.MtaH5 && window.MtaH5.clickStat('MC' + vm.$route.params.courseId)
         }, 2000)
 
         let timer = setTimeout(() => {
