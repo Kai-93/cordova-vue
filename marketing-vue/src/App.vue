@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view />
+    <div id="popout"></div>
   </div>
 </template>
 

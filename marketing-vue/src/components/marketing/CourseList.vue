@@ -191,13 +191,13 @@
        * */
       buy_course: function () {
         /* 未购买的点击才有效 */
-        console.log('buy_course')
-        if (this.has_buy_course === 0) {
+        window.vue = this
+        if (parseInt(this.has_buy_course) === 0) {
           /*
            * origin: 0为web,ios为苹果,android为安卓
            * */
-          if (this.origin === '0') {
-            if (this.has_subscribe === 0) {
+          if (parseInt(this.origin) === 0) {
+            if (parseInt(this.has_subscribe) === 0) {
               /* has_subscribe:0为未关注的用户 */
               // 弹出关注二维码
               let gdata = {
