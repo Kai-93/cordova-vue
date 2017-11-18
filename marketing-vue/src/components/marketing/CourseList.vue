@@ -94,6 +94,7 @@
   import mobileBinding from '../extend/mobileBinding.vue'
   import MyAlert from '../extend/MyAlert.vue'
   import $ from 'jquery'
+  import { getMarketingList } from '../../api/marketing'
 
   export default {
     data () {
@@ -156,7 +157,6 @@
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
             // 用户确认分享后执行的回调函数
-            // $.diyAlert("分享成功！");
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
@@ -172,7 +172,6 @@
 
           success: function () {
             // 用户确认分享后执行的回调函数
-            // $.diyAlert("分享到朋友圈成功！");
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
@@ -311,7 +310,8 @@
           }
           vm.has_user = str.has_user
         } else {
-          $.post('/wx/mc/list', function (res) {
+          getMarketingList().then(response => {
+            let res = response.data
             if (res.error_code === 20018) {
               window.location.href = '/wx/login'
               return false
@@ -334,10 +334,13 @@
             }
             vm.has_user = res.has_user
             vm.resData = res
+          }).catch(err => {
+            console.log(err)
           })
           return
         }
-        $.post('/wx/mc/list', function (res) {
+        getMarketingList().then(response => {
+          let res = response.data
           if (res.error_code === 20018) {
             window.location.href = '/wx/login'
             return false
@@ -358,6 +361,8 @@
           if (vm.has_buy_course !== res.has_buy_course) {
             vm.has_buy_course = res.has_buy_course
           }
+        }).catch(err => {
+          console.log(err)
         })
       })
     },

@@ -23,6 +23,19 @@ const turnProxy = (urls, target) => {
   })
   return temp
 }
+
+let index = '../../www/index.html'
+let assetsRoot = '../../www'
+let assetsSubDirectory = 'static'
+let assetsPublicPath = ''
+
+if (process.env.platform === 'web') {
+  index = '../dist/index.html'
+  assetsRoot = '../dist'
+  assetsSubDirectory = 'static/demo'
+  assetsPublicPath = '/'
+}
+
 module.exports = {
   dev: {
 
@@ -69,12 +82,11 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
-
+    index: path.resolve(__dirname, index),
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsRoot: path.resolve(__dirname, assetsRoot),
+    assetsSubDirectory: assetsSubDirectory,
+    assetsPublicPath: assetsPublicPath,
 
     /**
      * Source Maps

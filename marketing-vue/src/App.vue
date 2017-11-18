@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import { getSimulation, auth } from './api/api'
+  import { getSimulation, auth } from './api/wechat'
 
   export default {
     name: 'app',
