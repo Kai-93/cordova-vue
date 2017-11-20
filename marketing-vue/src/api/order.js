@@ -13,11 +13,17 @@ if (!window.cordova) {
 let instance = axios.create({
   baseURL: baseURL,
   timeout: 30000,
-  headers: { 'Content-Type': 'application/json; charset=UTF-8' }
+  headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Access-Control-Allow-Origin': '*'
+  }
 })
 
 // 授权状态
-export const getMarketingList = (url) => instance({
+export const createOrder = (type = 'mc') => instance({
   method: 'post',
-  url: '/wx/mc/list'
+  url: '/wx/order/create',
+  params: {
+    'order_type': type
+  }
 })

@@ -177,6 +177,8 @@
   import MyAlert from '../extend/MyAlert.vue'
   import mobileBinding from '../extend/mobileBinding.vue'
   import $ from 'jquery'
+  import { createOrder } from '../../api/order'
+  import { marketingVideoStatistics, getMarketingDetail } from '../../api/marketing'
 
   export default {
     data () {
@@ -335,9 +337,8 @@
 
               if (vm.pay_state) {
                 vm.pay_state = false
-                $.post('/wx/order/create', {
-                  'order_type': orderType
-                }, function (res) {
+                createOrder(orderType).then(response => {
+                  let res = response.data
                   if (res.status === 1) {
                     if (!vm.video_btn) {
                       vm.countVideo(vm.$route.params.courseId, document.querySelector('video').currentTime, function () {
@@ -349,7 +350,10 @@
                   } else {
                     alert('创建订单失败')
                   }
-                }, 'json')
+                }).catch(err => {
+                  console.log(err)
+                })
+
                 let timer = setTimeout(function () {
                   clearTimeout(timer)
                   vm.pay_state = true
@@ -358,15 +362,16 @@
             }
           } else {
             if (this.app_version < '2.2.0') {
-              $.post('/wx/order/create', {
-                'order_type': 'mc'
-              }, function (res) {
+              createOrder('mc').then(response => {
+                let res = response.data
                 if (res.status === 1) {
                   window.location.href = '/app/pay/index/' + res.order_id
                 } else {
                   alert('创建订单失败')
                 }
-              }, 'json')
+              }).catch(err => {
+                console.log(err)
+              })
             } else {
               if (this.origin === 'ios') {
                 window.webkit.messageHandlers.funAppPay.postMessage('mc')
@@ -464,13 +469,16 @@
         if (playTime || playTime === 0) {
           data['playTime'] = parseInt(playTime)
         }
-        $.post('/wx/mc/play/video', data, function (res) {
+        marketingVideoStatistics().then(response => {
+          let res = response.data
           if (res.status === 1) {
             if (callback) {
               callback(res)
             }
           }
-        }, 'json')
+        }).catch(err => {
+          console.log(err)
+        })
       },
       back: function () {
         let vm = this
@@ -488,7 +496,8 @@
         this.$router.push('/course/details/' + courseId)
       },
       postData: function (vm) {
-        $.post('/wx/mc/detail/' + vm.$route.params.courseId, function (res) {
+        getMarketingDetail(vm.$route.params.courseId).then(response => {
+          let res = response.data
           if (res.error_code === 20018) {
             window.location.href = '/wx/login'
             return
@@ -524,6 +533,8 @@
           vm.related_courses = res.course.related_courses
           vm.record_id = 0
           vm.video_btn = true
+        }).catch(err => {
+          console.log(err)
         })
       }
     },

@@ -11,7 +11,9 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build:web": "cross-env platform=web node build/build.js ",
+    "build:native": "cross-env platform=native node build/build.js"
   },
   "dependencies": {
     "vue": "^2.5.2",

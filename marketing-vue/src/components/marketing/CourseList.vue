@@ -95,6 +95,7 @@
   import MyAlert from '../extend/MyAlert.vue'
   import $ from 'jquery'
   import { getMarketingList } from '../../api/marketing'
+  import { createOrder } from '../../api/order'
 
   export default {
     data () {
@@ -240,27 +241,29 @@
               } else {
                 $(this).attr('ctime', nowTime)
               }
-              $.post('/wx/order/create', {
-                'order_type': 'mc'
-              }, function (res) {
+              createOrder('mc').then(response => {
+                let res = response.data
                 if (res.status === 1) {
                   window.location.href = '/wx/pay/order/index/' + res.order_id
                 } else {
                   alert('创建订单失败')
                 }
-              }, 'json')
+              }).catch(err => {
+                console.log(err)
+              })
             }
           } else {
             if (this.app_version < '2.2.0') {
-              $.post('/wx/order/create', {
-                'order_type': 'mc'
-              }, function (res) {
+              createOrder('mc').then(response => {
+                let res = response.data
                 if (res.status === 1) {
                   window.location.href = '/app/pay/index/' + res.order_id
                 } else {
                   alert('创建订单失败')
                 }
-              }, 'json')
+              }).catch(err => {
+                console.log(err)
+              })
             } else {
               if (this.origin === 'ios') {
                 window.webkit.messageHandlers.funAppPay.postMessage('mc')
