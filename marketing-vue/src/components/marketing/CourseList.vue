@@ -271,7 +271,7 @@
               }, () => {
                 console.log('fail')
               }, 'SalePlugin', 'funAppPay', {
-                'type': 'mc'
+                type: 'mc'
               })
               /*
               if (this.origin === 'ios') {

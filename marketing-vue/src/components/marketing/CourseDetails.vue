@@ -78,10 +78,10 @@
       <section class="marketing-course-content">
         <div class="poster-change-content">
           <div v-for="poster in show_posters">
-            <a class="poster-wrap" :href="poster.href">
+            <a class="poster-wrap" @click="jumpToPoster(poster.href)">
               <img :src="poster.cover | imgFile" alt="">
             </a>
-            <a class="poster-use-btn" :href="poster.href">使用</a>
+            <a class="poster-use-btn" @click="jumpToPoster(poster.href)">使用</a>
           </div>
         </div>
       </section>
@@ -239,6 +239,20 @@
         window.history.pushState(state, 'title', '#1')
         vm.isPageShow = true
       },
+      jumpToPoster (url) {
+        let origin = this.origin
+        if (origin === 0) {
+          window.location.href = url
+        } else {
+          cordova.exec(() => {
+            alert('success')
+          }, () => {
+            alert('fail')
+          }, 'SalePlugin', 'jumpToPoster', {
+            url: url + ''
+          })
+        }
+      },
       poster_change: function () {
         let vm = this
         let i = vm.poster_pos
@@ -379,7 +393,7 @@
               }, () => {
                 console.log('fail')
               }, 'SalePlugin', 'funAppPay', {
-                'type': 'mc'
+                type: 'mc'
               })
               /*
               if (this.origin === 'ios') {
