@@ -373,11 +373,19 @@
                 console.log(err)
               })
             } else {
+              /* eslint-disable */
+              cordova.exec(() => {
+                console.log('success')
+              }, () => {
+                console.log('fail')
+              }, 'SalePlugin', 'funAppPay', 'mc')
+              /*
               if (this.origin === 'ios') {
                 window.webkit.messageHandlers.funAppPay.postMessage('mc')
               } else if (this.origin === 'android') {
                 window.android.funAppPay('mc')
               }
+              */
             }
           }
         } else {
