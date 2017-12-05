@@ -378,7 +378,9 @@
                 console.log('success')
               }, () => {
                 console.log('fail')
-              }, 'SalePlugin', 'funAppPay', 'mc')
+              }, 'SalePlugin', 'funAppPay', JSON.stringify({
+                'type': 'mc'
+              }))
               /*
               if (this.origin === 'ios') {
                 window.webkit.messageHandlers.funAppPay.postMessage('mc')
