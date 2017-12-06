@@ -6,37 +6,21 @@
 </template>
 
 <script>
-  import { getSimulation, auth } from './api/wechat'
+  import { getSimulation } from './api/wechat'
 
   export default {
     name: 'app',
     mounted () {
-      let vm = this
-      if ((location.host.indexOf('yanzijia') > -1)) {
-        auth().then(response => {
-          let res = response.data
-          if (res.ifAuth === 1) {
-            vm.$store.dispatch('getLogStatus', {
-              on () {
-                vm.$store.dispatch('updateUserInfo')
-              },
-              off () {
-                console.log('user not login')
-              }
-            })
-          } else {
-            let url = location.href.replace('#', 'hash').replace('?', 'ask')
-            window.location.href = `/wx/login?next=${url}`
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      } else {
-        getSimulation().then(response => {
-          console.log(response)
-        }).catch(err => {
-          console.log(err)
-        })
+      /* web */
+      if (!window.cordova) {
+        /* 本地开发环境 */
+        if (location.host.indexOf('devsheji') === -1) {
+          getSimulation().then(response => {
+            console.log(response)
+          }).catch(err => {
+            console.log(err)
+          })
+        }
       }
     }
   }

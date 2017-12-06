@@ -5,7 +5,7 @@ import axios from 'axios'
 /*
 * 微信
 */
-let baseURL = 'http://devsheji.yanzijia.cn'
+let baseURL = document.querySelector('#domain') && document.querySelector('#domain').value
 if (!window.cordova) {
   baseURL = ''
 }

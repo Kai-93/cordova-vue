@@ -5,7 +5,8 @@ import axios from 'axios'
 /*
 * 微信
 */
-let baseURL = 'http://devsheji.yanzijia.cn'
+let baseURL = document.querySelector('#domain') && document.querySelector('#domain').value
+
 if (!window.cordova) {
   baseURL = ''
 }
@@ -36,11 +37,11 @@ export const getWxJs = (url = location.href) => instance({
 * 登入模块
 */
 // 获取登入信息
-export const getSimulation = () => instance({
+export const getSimulation = (wid = 100226, xuid = 100173, ak = '0') => instance({
   method: 'post',
   url: '/wx/simulation/auth',
   params: {
-    wid: 100226,
-    xuid: 100173
+    xuid: xuid,
+    ak: ak
   }
 })

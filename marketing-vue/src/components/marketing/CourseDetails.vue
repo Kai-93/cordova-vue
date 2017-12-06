@@ -244,6 +244,7 @@
         if (origin === 0) {
           window.location.href = url
         } else {
+          /* eslint-disable */
           cordova.exec(() => {
             alert('success')
           }, () => {
@@ -303,7 +304,7 @@
           /*
            * origin: 0为web,ios为苹果,android为安卓
            * */
-          if (this.origin === 0) {
+          if (!window.cordova) {
             if (this.has_subscribe === 0) {
               /* has_subscribe:0为未关注的用户 */
               // 弹出关注二维码
@@ -395,13 +396,6 @@
               }, 'SalePlugin', 'funAppPay', {
                 type: 'mc'
               })
-              /*
-              if (this.origin === 'ios') {
-                window.webkit.messageHandlers.funAppPay.postMessage('mc')
-              } else if (this.origin === 'android') {
-                window.android.funAppPay('mc')
-              }
-              */
             }
           }
         } else {
@@ -506,7 +500,6 @@
       },
       back: function () {
         let vm = this
-
         if (vm.back_state) {
           vm.back_state = false
           vm.$router.push('/')
@@ -539,11 +532,7 @@
           vm.has_buy_course = res.user_msg.has_buy_course
           vm.has_subscribe = res.user_msg.has_subscribe
           // ak值强制转化为0
-          if (res.user_msg.ak === 'wx') {
-            vm.origin = 0
-          } else {
-            vm.origin = res.user_msg.ak
-          }
+          vm.origin = res.user_msg.ak === 'wx' ? 0 : res.user_msg.ak
           vm.has_user = res.user_msg.has_user
           vm.user_msg = res.user_msg
           vm.words_show = res.course.words_show
@@ -582,56 +571,58 @@
     updated: function () {
       let vm = this
       /* 分享事件 */
-      let timer = setTimeout(function () {
-        clearTimeout(timer)
-        // 分享给朋友
-        window.wx.onMenuShareAppMessage({
-          title: vm.course.title, // 分享标题
-          desc: vm.course.share_friend, // 分享描述
-          link: window.location.href, // 分享链接
-          imgUrl: document.getElementById('app').dataset.img_domain + vm.course.cover, // 分享图标
-          type: 'link', // 分享类型,music、video或link，不填默认为link
-          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-          success: function () {
-            // 用户确认分享后执行的回调函数
-            // $.diyAlert("分享成功！");
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-            // alert("用户取消分享！");
-          }
-        })
+      if (!window.cordova) {
+        let timer = setTimeout(function () {
+          clearTimeout(timer)
+          // 分享给朋友
+          window.wx.onMenuShareAppMessage({
+            title: vm.course.title, // 分享标题
+            desc: vm.course.share_friend, // 分享描述
+            link: window.location.href, // 分享链接
+            imgUrl: document.getElementById('app').dataset.img_domain + vm.course.cover, // 分享图标
+            type: 'link', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+              // 用户确认分享后执行的回调函数
+              // $.diyAlert("分享成功！");
+            },
+            cancel: function () {
+              // 用户取消分享后执行的回调函数
+              // alert("用户取消分享！");
+            }
+          })
 
-        // 分享到朋友圈
-        window.wx.onMenuShareTimeline({
-          title: vm.course.share_circle, // 分享标题
-          desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
-          link: window.location.href, // 分享链接
-          imgUrl: document.getElementById('app').dataset.img_domain + vm.course.cover, // 分享图标
+          // 分享到朋友圈
+          window.wx.onMenuShareTimeline({
+            title: vm.course.share_circle, // 分享标题
+            desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
+            link: window.location.href, // 分享链接
+            imgUrl: document.getElementById('app').dataset.img_domain + vm.course.cover, // 分享图标
 
-          success: function () {
-            // 用户确认分享后执行的回调函数
-            // $.diyAlert("分享到朋友圈成功！");
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-          }
-        })
-      }, 1000);
+            success: function () {
+              // 用户确认分享后执行的回调函数
+              // $.diyAlert("分享到朋友圈成功！");
+            },
+            cancel: function () {
+              // 用户取消分享后执行的回调函数
+            }
+          })
+        }, 1000)
+      }
 
       /* 视频src */
       (function () {
-        if (document.getElementById('app').dataset.origin === 0 || document.getElementById('app').dataset.origin === '0') {
-          document.querySelector('video').src = document.getElementById('app').dataset.video_domain + vm.course.course_video
-        } else {
-          document.querySelector('video').src = document.getElementById('app').dataset.video_no_referer + vm.course.course_video
+        let temp = document.getElementById('app').dataset.video_no_referer
+        if (parseInt(document.getElementById('app').dataset.origin) === 0) {
+          temp = document.getElementById('app').dataset.video_domain
         }
+        document.querySelector('video').src = temp + vm.course.course_video
       })()
     },
     beforeRouteEnter (to, from, next) {
       next(function (vm) {
-        vm.app_version = $('#app_version').val()
-        vm.popData.origin = $('#app').data('origin')
+        vm.app_version = document.querySelector('#app_version')
+        vm.popData.origin = parseInt(document.querySelector('#origin').value)
         vm.postData(vm)
         let timer1 = setTimeout(function () {
           clearTimeout(timer1)

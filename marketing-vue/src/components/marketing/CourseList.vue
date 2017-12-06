@@ -34,7 +34,7 @@
             <span class="label no-after">最良心</span>
           </div>
           <div class="price-box" :class="has_buy_course==0 ? '': 'off'" @click="buy_course">
-            <p class="price-content" :style="origin === '0'?'':'font-size:.45rem'">
+            <p class="price-content" :style="origin === 0?'':'font-size:.45rem'">
               {{ origin === 0 ? '￥47' : '47美币'}}</p>
             <a class="price-btn" href="javascript:;">{{ has_buy_course === 0 ? '购买学习' : '已购买'}}</a>
           </div>
@@ -114,6 +114,7 @@
       }
     },
     mounted: function () {
+      window.vue = this
       let vm = this
       document.title = '营销课程'
       let timer = setTimeout(function () {
@@ -133,54 +134,106 @@
         }
       }, 500)
       /* 获取用户网络状态，视频自动播放 */
-      let timer2 = setTimeout(function () {
-        clearTimeout(timer2)
-        window.wx.getNetworkType({
-          success: function (res) {
-            let networkType = res.networkType // 返回网络类型2g，3g，4g，wifi
-            if (networkType === 'wifi') {
-              vm.play()
+      if (!window.cordova) {
+        let timer1 = setTimeout(function () {
+          clearTimeout(timer1)
+          window.wx.getNetworkType({
+            success: function (res) {
+              let networkType = res.networkType // 返回网络类型2g，3g，4g，wifi
+              if (networkType === 'wifi') {
+                vm.play()
+              }
             }
-          }
-        })
-      }, 2000)
-    },
-    updated: function () {
-      let timer = setTimeout(function () {
-        clearTimeout(timer)
-        // 分享给朋友
-        window.wx.onMenuShareAppMessage({
-          title: '美业设计助手·一键生成美图', // 分享标题
-          desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
-          link: 'http:// mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
-          imgUrl: document.getElementById('app').dataset.domain + '../../static/img/share.jpg', // 分享图标
-          type: 'link', // 分享类型,music、video或link，不填默认为link
-          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-          success: function () {
-            // 用户确认分享后执行的回调函数
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-            // alert("用户取消分享！");
-          }
-        })
-        // 分享到朋友圈
-        window.wx.onMenuShareTimeline({
-          title: '美业设计助手·一键生成美图', // 分享标题
-          desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
-          link: 'http:// mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
-          imgUrl: document.getElementById('app').dataset.domain + '../../static/img/share.jpg', // 分享图标
-
-          success: function () {
-            // 用户确认分享后执行的回调函数
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-          }
-        })
-      }, 1000)
+          })
+        }, 2000)
+        let timer2 = setTimeout(function () {
+          clearTimeout(timer2)
+          // 分享给朋友
+          window.wx.onMenuShareAppMessage({
+            title: '美业设计助手·一键生成美图', // 分享标题
+            desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
+            link: 'http://mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
+            imgUrl: document.getElementById('app').dataset.domain + '../../static/img/share.jpg', // 分享图标
+            type: 'link', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+              // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+              // 用户取消分享后执行的回调函数
+              // alert("用户取消分享！");
+            }
+          })
+          // 分享到朋友圈
+          window.wx.onMenuShareTimeline({
+            title: '美业设计助手·一键生成美图', // 分享标题
+            desc: '让美业人的每一条朋友圈，都在这里找到模板', // 分享描述
+            link: 'http://mp.weixin.qq.com/s/MVZBauxQxdSieGdrRLowZA', // 分享链接
+            imgUrl: document.getElementById('app').dataset.domain + '../../static/img/share.jpg', // 分享图标
+            success: function () {
+              // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+              // 用户取消分享后执行的回调函数
+            }
+          })
+        }, 1000)
+      }
     },
     methods: {
+      ajaxMCList (fn) {
+        getMarketingList().then(
+          fn
+        ).catch(err => {
+          console.log(err)
+        })
+      },
+      getMCList (response) {
+        let vm = this
+        let res = response.data
+        if (res.error_code === 20018) {
+          window.location.href = '/wx/login'
+          return false
+        }
+        let timer = setTimeout(function () {
+          clearTimeout(timer)
+          window.MtaH5 && window.MtaH5.clickStat('MarketingCourse')
+        }, 2000)
+        vm.learn_count = res.learn_count
+        vm.course_count = res.course_count
+        vm.course_list = res.course_list
+        vm.mc_carousel = res.mc_carousel
+        vm.has_buy_course = res.has_buy_course
+        vm.uid = res.uid
+        vm.has_subscribe = res.has_subscribe
+        vm.origin = res.ak === 'wx' ? 0 : res.ak
+        vm.has_user = res.has_user
+        vm.resData = res
+      },
+      changeMCStatus (response) {
+        let vm = this
+        let res = response.data
+        if (res.error_code === 20018) {
+          window.location.href = '/wx/login'
+          return false
+        }
+        let timer = setTimeout(function () {
+          clearTimeout(timer)
+          window.MtaH5 && window.MtaH5.clickStat('MarketingCourse')
+        }, 2000)
+        /* 关注状态改变 */
+        if (vm.has_subscribe !== res.has_subscribe) {
+          vm.has_subscribe = res.has_subscribe
+        }
+        /* 绑定手机状态改变 */
+        if (vm.uid !== res.uid) {
+          vm.uid = res.uid
+        }
+        /* 购买状态的改变 */
+        if (vm.has_buy_course !== res.has_buy_course) {
+          vm.has_buy_course = res.has_buy_course
+        }
+      },
       play () {
         document.querySelector('#list_video').play()
         this.list_video_btn = false
@@ -194,9 +247,10 @@
         window.vue = this
         if (parseInt(this.has_buy_course) === 0) {
           /*
-           * origin: 0为web,ios为苹果,android为安卓
-           * */
-          if (parseInt(this.origin) === 0) {
+           * window.cordova 对象存在为app
+           * 不存在为web
+           */
+          if (!window.cordova) {
             if (parseInt(this.has_subscribe) === 0) {
               /* has_subscribe:0为未关注的用户 */
               // 弹出关注二维码
@@ -265,21 +319,13 @@
                 console.log(err)
               })
             } else {
-              /* eslint-disable */
-              cordova.exec(() => {
+              window.cordova && window.cordova.exec(() => {
                 console.log('success')
               }, () => {
                 console.log('fail')
               }, 'SalePlugin', 'funAppPay', {
                 type: 'mc'
               })
-              /*
-              if (this.origin === 'ios') {
-                window.webkit.messageHandlers.funAppPay.postMessage('mc')
-              } else if (this.origin === 'android') {
-                window.android.funAppPay('mc')
-              }
-              */
             }
           }
         }
@@ -304,7 +350,6 @@
     },
     beforeRouteEnter (to, from, next) {
       next(function (vm) {
-        vm.app_version = $('#app_version').val()
         vm.isWatch = true
         let str = JSON.parse(sessionStorage.getItem('obj'))
         if (!vm.funIsOwnEmpty(str)) {
@@ -316,73 +361,36 @@
           vm.has_buy_course = str.has_buy_course
           vm.uid = str.uid
           vm.has_subscribe = str.has_subscribe
-          if (str.ak === 'wx') {
-            vm.origin = 0
-          } else {
-            vm.origin = str.ak
-          }
+          vm.origin = str.ak === 'wx' ? 0 : str.ak
           vm.has_user = str.has_user
         } else {
-          getMarketingList().then(response => {
-            let res = response.data
-            if (res.error_code === 20018) {
-              window.location.href = '/wx/login'
-              return false
-            }
-            let timer1 = setTimeout(function () {
-              clearTimeout(timer1)
-              window.MtaH5 && window.MtaH5.clickStat('MarketingCourse')
-            }, 2000)
-            vm.learn_count = res.learn_count
-            vm.course_count = res.course_count
-            vm.course_list = res.course_list
-            vm.mc_carousel = res.mc_carousel
-            vm.has_buy_course = res.has_buy_course
-            vm.uid = res.uid
-            vm.has_subscribe = res.has_subscribe
-            if (res.ak === 'wx') {
-              vm.origin = 0
-            } else {
-              vm.origin = res.ak
-            }
-            vm.has_user = res.has_user
-            vm.resData = res
-          }).catch(err => {
-            console.log(err)
+          /* web */
+          if (!window.cordova) {
+            vm.app_version = document.querySelector('#app_version').value
+            vm.ajaxMCList(vm.getMCList)
+            return false
+          }
+          /* app */
+          window.cordova && window.cordova.exec((obj) => {
+            vm.app_version = obj['app_version']
+            document.querySelector('#app_version').value = obj['app_version']
+            document.querySelector('#img_domain').value = obj['img_domain']
+            document.querySelector('#domain').value = obj['domain']
+            document.querySelector('#origin').value = obj['origin']
+            vm.ajaxMCList(vm.getMCList)
+          }, () => {
+            console.log('fail')
+          }, 'SalePlugin', 'funGetCookie', {
+            type: 'mc'
           })
           return
         }
-        getMarketingList().then(response => {
-          let res = response.data
-          if (res.error_code === 20018) {
-            window.location.href = '/wx/login'
-            return false
-          }
-          let timer = setTimeout(function () {
-            clearTimeout(timer)
-            window.MtaH5 && window.MtaH5.clickStat('MarketingCourse')
-          }, 2000)
-          /* 关注状态改变 */
-          if (vm.has_subscribe !== res.has_subscribe) {
-            vm.has_subscribe = res.has_subscribe
-          }
-          /* 绑定手机状态改变 */
-          if (vm.uid !== res.uid) {
-            vm.uid = res.uid
-          }
-          /* 购买状态的改变 */
-          if (vm.has_buy_course !== res.has_buy_course) {
-            vm.has_buy_course = res.has_buy_course
-          }
-        }).catch(err => {
-          console.log(err)
-        })
+        vm.ajaxMCList(vm.changeMCStatus)
       })
     },
     beforeRouteLeave (to, from, next) {
       let vm = this
-      let str = JSON.stringify(vm.resData)
-      sessionStorage.obj = str
+      sessionStorage['obj'] = JSON.stringify(vm.resData)
       vm.scrolltopValue = parseInt(document.documentElement.scrollTop || document.body.scrollTop)
       sessionStorage.setItem('top', vm.scrolltopValue)
       next(true)
