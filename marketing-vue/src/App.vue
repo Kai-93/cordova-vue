@@ -26,5 +26,6 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+  @import '~index.css';
 </style>
